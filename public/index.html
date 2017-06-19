@@ -1,0 +1,31 @@
+<html>
+<head>
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+  <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+  <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous">
+    </script>
+    <script src="/javascripts/game.js"></script>
+  <title>TrapHouse</title>
+</head>
+<body>
+  <p>Game on deck</p>
+  <h1 id="messages"></h1>
+  <div id="chatdiv">
+    <section id="chatroom">
+      <input id="message" type="text" placeholder="Enter message">
+      <input id="send" type="button" value="Send">
+      <ul id="chatroom-messages"></ul>
+    </section>
+    <div id="setnamesection"> Enter Street Name
+    <input id="nickname" type="text" placeholder="Nickname">
+    <input id="setname" type="button" value="Set Name">
+     </div>
+  </div>
+
+<canvas id="game" width="1200" height="800" style="border:1px solid #000000;">
+</canvas>
+
+</body>
