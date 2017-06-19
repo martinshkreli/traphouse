@@ -13,14 +13,6 @@ var createRandom = function (min, max) {
   return newRandom;
 }
 
-var drawCircle = function(x, y, r, c) {
-  ctx.fillStyle = c;
-  ctx.beginPath();
-  ctx.arc(x, y, r, 0, 2*Math.PI);
-  ctx.stroke();
-  ctx.fill();
-}
-
 var user = {
   name: '',
   radius: 50,
@@ -143,8 +135,6 @@ window.onkeydown = function(e) {
      if ((user.y - user.radius + 5)  < 10) {return;};
      check = collisionCheck();
      if (check == true){
-       user.x += user.speed;
-       user.y -= user.speed;
        sendPosition();
      } else {return;}
    } else if (key === 103) { //keypad 7
@@ -152,8 +142,6 @@ window.onkeydown = function(e) {
      if (user.x - user.radius - 5 < 0) {return;};
      check = collisionCheck();
      if (check == true) {
-       user.x -= user.speed;
-       user.y -= user.speed;
        sendPosition();
      } else {return;}
    } else if (key === 97) { //keypad 1
@@ -161,8 +149,6 @@ window.onkeydown = function(e) {
      if (user.x - user.radius - 5 < 0) {return;};
      check = collisionCheck();
       if (check == true) {
-       user.x -= user.speed;
-       user.y += user.speed;
        sendPosition();
       } else {return;}
    } else if (key === 99) { //keypad 3
@@ -170,8 +156,6 @@ window.onkeydown = function(e) {
      if (user.x + user.radius + 5 > 1200) {return;};
      check = collisionCheck();
       if (check == true) {
-        user.x += user.speed;
-        user.y += user.speed;
         sendPosition();
       } else {return;}
    } else if (key === 67) { //C
