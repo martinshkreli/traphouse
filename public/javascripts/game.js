@@ -54,15 +54,8 @@ socket.on('message', function(data) {
     $('#messages').append($('<ul>').text(data.message));
     user.userId = data.userId;
     user.color = data.color;
-    user.x = data.x;
-    user.y = data.y;
-    user.radius = data.radius;
     map.users[user.userId] = {};
     map.users[user.userId].color = user.color;
-    map.users[user.userId].radius = user.radius;
-    map.users[user.userId].y = user.y;
-    map.users[user.userId].x = user.x;
-    drawCircle(user.x, user.y, user.radius, user.color);
   };
 
   if (data.type === "userAction") {
