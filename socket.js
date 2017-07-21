@@ -31,8 +31,9 @@ exports.initialize = function(server) {
     else {
       auths[userCount] = socket.handshake.headers.cookie;
     }
+    let rnd = createRandom(0,5);
     var userProto = new userProtoModel(
-      names[0]
+      names[rnd]
     );
   //put userProto information into globalMap
     globalMap.users[userCount] = userProto;
