@@ -116,41 +116,6 @@ window.onkeydown = function(e) {
       };
       socket.send(JSON.stringify(data));
      };
-   } else if (key === 37 || key === 100) { //LEFT
-     if (user.x - user.radius - 5 < 0) {return;};
-      check = collisionCheck();
-      if (check == true) {
-        user.x -= user.speed;
-        sendPosition();
-      } else {return;}
-   } else if (key === 105) { //keypad 9
-     if (user.x + user.radius + 5 > 1200) {return;};
-     if ((user.y - user.radius + 5)  < 10) {return;};
-     check = collisionCheck();
-     if (check == true){
-       sendPosition();
-     } else {return;}
-   } else if (key === 103) { //keypad 7
-     if ((user.y - user.radius + 5)  < 10) {return;};
-     if (user.x - user.radius - 5 < 0) {return;};
-     check = collisionCheck();
-     if (check == true) {
-       sendPosition();
-     } else {return;}
-   } else if (key === 97) { //keypad 1
-     if ((user.y + user.radius + 5) > 800) {return;};
-     if (user.x - user.radius - 5 < 0) {return;};
-     check = collisionCheck();
-      if (check == true) {
-       sendPosition();
-      } else {return;}
-   } else if (key === 99) { //keypad 3
-     if (user.y + user.radius + 5 > 800) {return;};
-     if (user.x + user.radius + 5 > 1200) {return;};
-     check = collisionCheck();
-      if (check == true) {
-        sendPosition();
-      } else {return;}
    } else if (key === 67) { //C
      user.color = "rgba(" + createRandom(0,255) + ", " + createRandom(0,255) + ", " + createRandom(0,255) + ", 0.5)";
      var data = {
@@ -191,6 +156,7 @@ var renderUpdate = function(data) {
 };
 
   $('#send').on('click', function (clicked) {
+    console.log('clicked')
   const messageToSend = $('#message').val();
   if (messageToSend.length < 1) {
     alert('Make sure to actually write a message!');
