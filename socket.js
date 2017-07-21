@@ -32,7 +32,7 @@ exports.initialize = function(server) {
       auths[userCount] = socket.handshake.headers.cookie;
     }
     var userProto = new userProtoModel(
-      names[rnd]
+      names[0]
     );
   //put userProto information into globalMap
     globalMap.users[userCount] = userProto;

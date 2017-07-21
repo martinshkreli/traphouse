@@ -20,11 +20,11 @@ var user = {
 
 var users = [];
 var auth = "";
-//map.users[0] = user;
 
 socket.on('message', function(data) {
   data = JSON.parse(data);
-
+  console.log('message received');
+  console.log(data);
   if (data.username) {
     $('#messages').append('<div class="'+data.type+'"><span class="name">' + data.username + ":</span> " + data.message + '</div');
   }
@@ -51,15 +51,10 @@ socket.on('message', function(data) {
     map.users[user.userId] = {};
   };
 
-  if (data.type === "userAction") {
-    renderUpdate(data);
-  };
-
   if (data.type === "mapMessage") {
     for (var n = 0; n < data.message.users.length; n++){
       map.users[n] = data.message.users[n];
     }
-    render();
   }
 });
 
@@ -69,29 +64,10 @@ window.onkeydown = function(e) {
   var key = e.keyCode ? e.keyCode : e.which;
 }
 
-var clearBackground = function() {
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0,0,1200,800);
-};
-
-var render = function() {
-  clearBackground();
-  renderMap();
-  ctx.fillStyle = 'black'; ctx.font = '18px Arial';
-  ctx.fillText("Number connected: " + map.users.length, 0, 750);
-};
-
-var renderMap = function() {};
-
-var renderUpdate = function(data) {
-    //look up current value for specific user in client-side userMap
-    render();
-};
-
 $('#send').on('click', function (clicked) {
   console.log('clicked');
   const messageToSend = $('#message').val();
-  $('#message').value = '';
+  $('#message').val('');
   if (messageToSend.length < 1) {
     alert('Make sure to actually write a message!');
     return;
