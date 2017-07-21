@@ -1,6 +1,3 @@
-//bugs include new users do not correctly display map locations of all connected users
-//disconnections not processed properly
-
 var io = require('socket.io');
 var sanitizeHtml = require('sanitize-html');
 var userCount = 0;
@@ -9,15 +6,9 @@ var users = [];
 var globalChatroom = [];
 var auths = [];
 
-var createRandom = function (min, max) {
-  var newRandom = Math.floor((Math.random() * max) + min);
-  return newRandom;
-}
-
 class userProtoModel {
-  constructor(name, color) {
+  constructor(name) {
     this.name = '';
-    this.color = color;
   }
 }
 
@@ -40,12 +31,8 @@ exports.initialize = function(server) {
     else {
       auths[userCount] = socket.handshake.headers.cookie;
     }
-
-    var rnd = createRandom(0,10);
-  //assign random name, color, x and y location, 50 radius and 5 speed
     var userProto = new userProtoModel(
       names[rnd],
-      "rgba(" + createRandom(0,255) + ", " + createRandom(0,255) + ", " + createRandom(0,255) + ", 0.5)"
     );
   //put userProto information into globalMap
     globalMap.users[userCount] = userProto;
@@ -91,9 +78,6 @@ exports.initialize = function(server) {
 
         if (message.type === 'disconnection') {
           console.log(message.message.userId + " disconnected");
-          globalMap.users[message.message.userId].x = 0;
-          globalMap.users[message.message.userId].y = 0;
-          globalMap.users[message.message.userId].radius = 0;
         }
 
         if (message.type === 'textMessage') {

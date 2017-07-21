@@ -15,11 +15,6 @@ var createRandom = function (min, max) {
 
 var user = {
   name: '',
-  radius: 50,
-  speed: 5,
-  color: '',
-  x: 1,
-  y: 1,
   userId: 0
 }
 
@@ -53,9 +48,7 @@ socket.on('message', function(data) {
   if (data.type === "serverMessage") {
     $('#messages').append($('<ul>').text(data.message));
     user.userId = data.userId;
-    user.color = data.color;
     map.users[user.userId] = {};
-    map.users[user.userId].color = user.color;
   };
 
   if (data.type === "userAction") {
@@ -73,66 +66,7 @@ socket.on('message', function(data) {
 window.onkeydown = function(e) {
   //e.preventDefault();
   var check;
-   var key = e.keyCode ? e.keyCode : e.which;
-   if (key === 38 || key === 104) { //up
-     if ((user.y - user.radius + 5)  < 10) {return;};
-     check = collisionCheck();
-      if (check == true) {
-        user.y -= user.speed;
-        sendPosition();
-      } else {return;}
-   } else if (key === 40 || key === 98) { //down
-     if ((user.y + user.radius + 5) > 800) {return;};
-     check = collisionCheck();
-     if (check == true) {
-       user.y += user.speed;
-       sendPosition();
-     } else {return;}
-   } else if (key === 39 || key === 102) { //right
-     if (user.x + user.radius + 5 > 1200) {return;};
-      check = collisionCheck();
-      if (check == true) {
-        user.x += user.speed;
-        sendPosition();
-      } else {return;}
-   } else if (key === 83) { //S key
-       if (user.speed > 10) {
-         ctx.fillStyle = 'black';ctx.font = '80px Arial';
-         ctx.fillText("max speed!", 50, 200);
-         return;
-       } else {
-         user.speed = user.speed * 1.05;
-         user.radius = user.radius * 0.95;
-      var data = {
-        type: 'userAction',
-        message: {
-         userId: user.userId,
-         radius: user.radius,
-         color: user.color,
-         x: user.x,
-         y: user.y,
-         auth: auth
-       }
-      };
-      socket.send(JSON.stringify(data));
-     };
-   } else if (key === 67) { //C
-     user.color = "rgba(" + createRandom(0,255) + ", " + createRandom(0,255) + ", " + createRandom(0,255) + ", 0.5)";
-     var data = {
-       type: 'userAction',
-       message: {
-         userId: user.userId,
-         color: user.color,
-         radius: user.radius,
-         x: user.x,
-         y: user.y,
-         auth: auth
-       }
-     };
-      socket.send(JSON.stringify(data));
-   } else if (key === 68) { //V
-     console.log(map);
-   }
+  var key = e.keyCode ? e.keyCode : e.which;
 }
 
 var clearBackground = function() {
@@ -147,23 +81,22 @@ var render = function() {
   ctx.fillText("Number connected: " + map.users.length, 0, 750);
 };
 
-var renderMap = function() {
-};
+var renderMap = function() {};
 
 var renderUpdate = function(data) {
     //look up current value for specific user in client-side userMap
     render();
 };
 
-  $('#send').on('click', function (clicked) {
-    console.log('clicked')
+$('#send').on('click', function (clicked) {
+  console.log('clicked');
   const messageToSend = $('#message').val();
   if (messageToSend.length < 1) {
     alert('Make sure to actually write a message!');
     return;
   }
   if (messageToSend.length > 20) {
-    alert('Make sure to actually write a message!');
+    alert('Too long!');
     return;
   }
   var payload = {
@@ -171,6 +104,7 @@ var renderUpdate = function(data) {
     msg: messageToSend
   };
   socket.send(JSON.stringify(payload));
+  $('#send').value = '';
 });
 
 $('#setname').on('click', function(clicked) {
