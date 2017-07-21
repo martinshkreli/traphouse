@@ -91,6 +91,7 @@ var renderUpdate = function(data) {
 $('#send').on('click', function (clicked) {
   console.log('clicked');
   const messageToSend = $('#message').val();
+  $('#message').value = '';
   if (messageToSend.length < 1) {
     alert('Make sure to actually write a message!');
     return;
@@ -104,7 +105,6 @@ $('#send').on('click', function (clicked) {
     msg: messageToSend
   };
   socket.send(JSON.stringify(payload));
-  $('#send').value = '';
 });
 
 $('#setname').on('click', function(clicked) {
