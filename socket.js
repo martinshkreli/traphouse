@@ -8,7 +8,7 @@ var auths = [];
 
 class userProtoModel {
   constructor(name) {
-    this.name = '';
+    this.name = name;
   }
 }
 
@@ -35,7 +35,6 @@ exports.initialize = function(server) {
     var userProto = new userProtoModel(
       names[rnd]
     );
-  //put userProto information into globalMap
     globalMap.users[userCount] = userProto;
   //send a serverMessage to client
     socket.send(JSON.stringify(
@@ -68,10 +67,6 @@ exports.initialize = function(server) {
           //  console.log("auth passed");
           }
           else {throw ("auth failed");}
-          //check if user message meets obvious params
-          //call stateBuilder
-          var verify = stateBuilder(message); //add user update to globalMap
-          //message.type = 'myMessage';
           if (verify == true) {
             io.emit('message', JSON.stringify(message));
           } else {return;}

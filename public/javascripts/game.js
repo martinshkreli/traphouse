@@ -38,10 +38,10 @@ socket.on('message', function(data) {
     const listElements = $('#chatroom-messages').children();
     if (listElements.length.length < 1) {
       for (var i = 0; i < allChatMessages.length; i++) {
-        $("#chatroom-messages").append('<li>' + allChatMessages[i] + '</li>')
+        $("#chatroom-messages").append('<p>' + allChatMessages[i] + '</p>')
       }
     } else {
-        $("#chatroom-messages").append('<li>' + allChatMessages.pop() + '</li>')
+        $("#chatroom-messages").append('<p>' + allChatMessages.pop() + '</p>')
     }
   }
 
