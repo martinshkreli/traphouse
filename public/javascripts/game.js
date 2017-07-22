@@ -25,6 +25,8 @@ socket.on('message', function(data) {
   data = JSON.parse(data);
   console.log('message received');
   console.log(data);
+  console.log('userId: ', data.userId);
+  user.userId = data.userId;
   if (data.username) {
     $('#messages').append('<div class="'+data.type+'"><span class="name">' + data.username + ":</span> " + data.message + '</div');
   }
@@ -65,7 +67,6 @@ window.onkeydown = function(e) {
 }
 
 $('#send').on('click', function (clicked) {
-  console.log('clicked');
   const messageToSend = $('#message').val();
   $('#message').val('');
   if (messageToSend.length < 1) {
@@ -84,7 +85,20 @@ $('#send').on('click', function (clicked) {
 });
 
 $('#setname').on('click', function(clicked) {
-  socket.emit("set_name", {name: $('#nickname').val() });
-});
-
+  let name = $('#nickname').val();
+  $('#nickname').val('');
+  if (name.length < 3) return;
+  if (name.length > 12) return;
+  let payload = {
+    type: 'nameMessage',
+    name: name,
+    userId: user.userId
+  };
+  socket.send(JSON.stringify(payload));
+  renderName();
+  });
 })
+
+function renderName() {
+
+}

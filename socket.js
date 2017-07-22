@@ -39,10 +39,11 @@ exports.initialize = function(server) {
   //send a serverMessage to client
     socket.send(JSON.stringify(
       {
-        type: 'serverMessage',
-        message: 'Welcome to TrapHouse ' + globalMap.users[userCount].name + '! ' + userCount,
+        type: 'initConnect',
+        name: globalMap.users[userCount].name,
         userId: userCount
       }
+
     ));
     //send mapMessage to client
     socket.broadcast.send(JSON.stringify(
@@ -63,9 +64,7 @@ exports.initialize = function(server) {
           //ensure auth
           if (auths[((message.message.userId) - 1)] == message.message.auth
              || auths[message.message.userId] == message.message.auth
-             || auths[((message.message.userId) + 1)] == message.message.auth ) {
-          //  console.log("auth passed");
-          }
+             || auths[((message.message.userId) + 1)] == message.message.auth ) {}
           else {throw ("auth failed");}
           if (verify == true) {
             io.emit('message', JSON.stringify(message));
@@ -75,7 +74,12 @@ exports.initialize = function(server) {
         if (message.type === 'disconnection') {
           console.log(message.message.userId + " disconnected");
         }
-
+        if (message.type === 'nameMessage') {
+          console.log('name setting attempted');
+          console.log(message.name);
+          console.log(message.userId);
+          globalMap.users[message.userId].name = message.name;
+        }
         if (message.type === 'textMessage') {
           const messageToSend = sanitizeHtml(message.msg);
           if (messageToSend.length < 1) {return;}
