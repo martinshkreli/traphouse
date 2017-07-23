@@ -1,7 +1,7 @@
 var io = require('socket.io');
 var sanitizeHtml = require('sanitize-html');
 var userCount = 0;
-var names = ['Martin', 'Mark', 'Randa', 'Cyan', 'Trashy', 'Armnoodle', 'Emily', 'Speakeasy', 'Florida', 'Jinx', 'ODB']
+var names = ['Mills', 'Bones', 'T-Stacks', 'Deadeye', 'ODB', 'Virus', 'El Guerro', 'Speakeasy', 'Florida', 'Jinx', 'ODB', 'Lil Nasty', 'Slim', 'Maurice', 'EZ Gunz', 'Yung Trap Lord', 'Big Mo', 'Tyrone', 'Big Slam', 'T-Bone', 'Big Daddy', 'Daquan'];
 var users = [];
 var globalChatroom = [];
 var auths = [];
@@ -31,7 +31,7 @@ exports.initialize = function(server) {
     else {
       auths[userCount] = socket.handshake.headers.cookie;
     }
-    let rnd = createRandom(0,5);
+    let rnd = createRandom(0,(names.length));
     var userProto = new userProtoModel(
       names[rnd]
     );
