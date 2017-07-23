@@ -73,7 +73,7 @@ function sendMessagePayload() {
     alert('Make sure to actually write a message!');
     return;
   }
-  if (messageToSend.length > 20) {
+  if (messageToSend.length > 30) {
     alert('Too long!');
     return;
   }
