@@ -37,11 +37,11 @@ socket.on('message', function(data) {
     if (listElements.length.length < 1) {
       for (var i = 0; i < allChatMessages.length; i++) {
         $("#chatroom-messages").append('<p>' + allChatMessages[i] + '</p>');
-        $("#chatroom-messages").scrollTop(300);
+        $("#chatroom-messages").scrollTop($("#chatroom-messages").height());
       }
     } else {
         $("#chatroom-messages").append('<p>' + allChatMessages.pop() + '</p>')
-        $("#chatroom-messages").scrollTop(300);
+        $("#chatroom-messages").scrollTop($("#chatroom-messages").height());
     }
   }
   if(data.type === "initConnect") {
@@ -80,7 +80,7 @@ function sendMessagePayload() {
   var payload = {
     type: 'textMessage',
     msg: messageToSend,
-    userId: user.userId 
+    userId: user.userId
   };
   socket.send(JSON.stringify(payload));
 }
