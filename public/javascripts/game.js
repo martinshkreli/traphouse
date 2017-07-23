@@ -94,7 +94,8 @@ $('#setname').on('click', function(clicked) {
   let payload = {
     type: 'nameMessage',
     name: name,
-    userId: user.userId
+    userId: user.userId,
+    auth: auth
   };
   socket.send(JSON.stringify(payload));
   });

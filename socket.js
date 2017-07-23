@@ -75,6 +75,12 @@ exports.initialize = function(server) {
           console.log(message.message.userId + " disconnected");
         }
         if (message.type === 'nameMessage') {
+
+          if (auths[((message.message.userId) - 1)] == message.message.auth
+             || auths[message.message.userId] == message.message.auth
+             || auths[((message.message.userId) + 1)] == message.message.auth ) {}
+          else {throw ("auth failed");}
+
           console.log('name setting attempted!');
           console.log(message);
           globalMap.users[message.userId].name = message.name;
@@ -92,7 +98,6 @@ exports.initialize = function(server) {
           if (messageToSend.length > 40) {return;}
           if (messageToSend.indexOf("fuck") != -1) {return;};
           if (messageToSend.indexOf("fuk") != -1) {return;};
-          console.log('message recieved %s', messageToSend);
           globalChatroom.push(messageToSend);
           // Prepare to send the global chatroom to all users.
           const payload = {
