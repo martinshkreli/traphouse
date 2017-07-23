@@ -31,29 +31,23 @@ socket.on('message', function(data) {
   if (data.type === 'connection') {
     auth = data.cookie;
   }
-
   if (data.type === 'messages') {
     const allChatMessages = data.chats;
     const listElements = $('#chatroom-messages').children();
     if (listElements.length.length < 1) {
       for (var i = 0; i < allChatMessages.length; i++) {
-        $("#chatroom-messages").append('<p>' + allChatMessages[i] + '</p>')
+        $("#chatroom-messages").append('<p>' + allChatMessages[i] + '</p>');
+        $("#chatroom-messages").scrollTop(300);
       }
     } else {
         $("#chatroom-messages").append('<p>' + allChatMessages.pop() + '</p>')
+        $("#chatroom-messages").scrollTop(300);
     }
   }
-
   if(data.type === "initConnect") {
     console.log('got connection');
     $('#playerConsole').html('Player name: ' + data.name);
   };
-
-  if (data.type === "mapMessage") {
-    for (var n = 0; n < data.message.users.length; n++){
-      map.users[n] = data.message.users[n];
-    }
-  }
 });
 
 window.onkeydown = function(e) {
@@ -63,6 +57,16 @@ window.onkeydown = function(e) {
 }
 
 $('#send').on('click', function (clicked) {
+  sendMessagePayload();
+});
+
+$('#message').keypress(function(e) {
+  if (e.which == 13) {
+    sendMessagePayload();
+  }
+})
+
+function sendMessagePayload() {
   const messageToSend = $('#message').val();
   $('#message').val('');
   if (messageToSend.length < 1) {
@@ -75,10 +79,11 @@ $('#send').on('click', function (clicked) {
   }
   var payload = {
     type: 'textMessage',
-    msg: messageToSend
+    msg: messageToSend,
+    userId: user.userId 
   };
   socket.send(JSON.stringify(payload));
-});
+}
 
 $('#setname').on('click', function(clicked) {
   let name = $('#nickname').val();
