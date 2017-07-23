@@ -73,7 +73,7 @@ function sendMessagePayload() {
     alert('Make sure to actually write a message!');
     return;
   }
-  if (messageToSend.length > 30) {
+  if (messageToSend.length > 35) {
     alert('Too long!');
     return;
   }
@@ -89,7 +89,7 @@ $('#setname').on('click', function(clicked) {
   let name = $('#nickname').val();
   $('#nickname').val('');
   if (name.length < 3) return;
-  if (name.length > 12) return;
+  if (name.length > 15) return;
   console.log(user);
   let payload = {
     type: 'nameMessage',

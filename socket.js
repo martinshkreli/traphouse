@@ -89,7 +89,7 @@ exports.initialize = function(server) {
           let messageToSend = sanitizeHtml(message.msg);
           messageToSend = globalMap.users[message.userId].name + ': ' + messageToSend;
           if (messageToSend.length < 1) {return;}
-          if (messageToSend.length > 30) {return;}
+          if (messageToSend.length > 40) {return;}
           if (messageToSend.indexOf("fuck") != -1) {return;};
           if (messageToSend.indexOf("fuk") != -1) {return;};
           console.log('message recieved %s', messageToSend);
