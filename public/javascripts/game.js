@@ -1,5 +1,8 @@
 $(function() {
-
+var user = {
+  name: '',
+  userId: 0
+}
 var c = document.getElementById("game");
 var ctx = c.getContext("2d");
 var socket = io.connect('/');
@@ -13,24 +16,18 @@ var createRandom = function (min, max) {
   return newRandom;
 }
 
-var user = {
-  name: '',
-  userId: 0
-}
-
 var users = [];
 var auth = "";
 
 socket.on('message', function(data) {
   data = JSON.parse(data);
-  console.log('message received');
   console.log(data);
-  console.log('userId: ', data.userId);
-  user.userId = data.userId;
+  if (data.userId) {
+    user.userId = data.userId;
+  };
   if (data.username) {
     $('#messages').append('<div class="'+data.type+'"><span class="name">' + data.username + ":</span> " + data.message + '</div');
-  }
-
+  };
   if (data.type === 'connection') {
     auth = data.cookie;
   }
@@ -47,10 +44,9 @@ socket.on('message', function(data) {
     }
   }
 
-  if (data.type === "serverMessage") {
-    $('#messages').append($('<ul>').text(data.message));
-    user.userId = data.userId;
-    map.users[user.userId] = {};
+  if(data.type === "initConnect") {
+    console.log('got connection');
+    $('#playerConsole').html('Player name: ' + data.name);
   };
 
   if (data.type === "mapMessage") {
@@ -89,16 +85,12 @@ $('#setname').on('click', function(clicked) {
   $('#nickname').val('');
   if (name.length < 3) return;
   if (name.length > 12) return;
+  console.log(user);
   let payload = {
     type: 'nameMessage',
     name: name,
     userId: user.userId
   };
   socket.send(JSON.stringify(payload));
-  renderName();
   });
 })
-
-function renderName() {
-
-}

@@ -75,10 +75,15 @@ exports.initialize = function(server) {
           console.log(message.message.userId + " disconnected");
         }
         if (message.type === 'nameMessage') {
-          console.log('name setting attempted');
-          console.log(message.name);
-          console.log(message.userId);
+          console.log('name setting attempted!');
+          console.log(message);
           globalMap.users[message.userId].name = message.name;
+          let payload = {
+            type: 'initConnect',
+            name: globalMap.users[message.userId].name,
+            userCount: message.userId
+          };
+          socket.send(JSON.stringify(payload));
         }
         if (message.type === 'textMessage') {
           const messageToSend = sanitizeHtml(message.msg);
