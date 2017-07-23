@@ -37,11 +37,11 @@ socket.on('message', function(data) {
     if (listElements.length.length < 1) {
       for (var i = 0; i < allChatMessages.length; i++) {
         $("#chatroom-messages").append('<p>' + allChatMessages[i] + '</p>');
-        $("#chatroom-messages").scrollTop($("#chatroom-messages").height());
+        $("#chatroom-messages").scrollTop($("#chatroom-messages").prop('scrollHeight'));
       }
     } else {
         $("#chatroom-messages").append('<p>' + allChatMessages.pop() + '</p>')
-        $("#chatroom-messages").scrollTop($("#chatroom-messages").height());
+        $("#chatroom-messages").scrollTop($("#chatroom-messages").prop('scrollHeight'));
     }
   }
   if(data.type === "initConnect") {
