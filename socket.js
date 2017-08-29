@@ -1,14 +1,24 @@
+var createRandom = (min, max) => {
+  var newRandom = Math.floor((Math.random() * max) + min);
+  return newRandom;
+}
+
 var io = require('socket.io');
 var sanitizeHtml = require('sanitize-html');
 var userCount = 0;
-var names = ['Mills', 'Bones', 'T-Stacks', 'Deadeye', 'ODB', 'Virus', 'El Guerro', 'Speakeasy', 'Florida', 'Jinx', 'ODB', 'Lil Nasty', 'Slim', 'Maurice', 'EZ Gunz', 'Yung Trap Lord', 'Big Mo', 'Tyrone', 'Big Slam', 'T-Bone', 'Big Daddy', 'Daquan', 'Pablo', 'Jimmy Two Times', 'Johnny Bagels', 'Quan', 'Shorty', 'RaRa', 'TayTay'];
+var prefix = ['Lil', 'Big', 'Fat', 'OG', 'Blood', 'El', 'Don', 'Boss', 'Killer', 'Babyface' ]
+var suffix = ['da OG', 'The Ruler', 'The Best', 'Stacks']
+var names = ['Mills', 'Bones', 'T', 'Tone', 'Tony', 'Daquan', 'Deadeye', 'ODB', 'Virus', 'Guerro', 'Speakeasy', 'Florida', 'Jinx', 'ODB', 'Nasty', 'Slim', 'Maurice', 'EZ Gunz', 'Yung Trap Lord', 'Big Mo', 'Tyrone', 'Slam', 'T-Bone', 'Daddy', 'Daquan', 'Pablo', 'Jimmy Two Times', 'Johnny Bagels', 'Quan', 'Shorty', 'RaRa', 'TayTay'];
 var users = [];
 var globalChatroom = [];
 var auths = [];
 
-class userProtoModel {
+class User {
   constructor(name) {
-    this.name = name;
+    const prefixPart = prefix[createRandom(0, prefix.length - 1)];
+    const namePart = names[createRandom(0, names.length - 1)];
+    const suffixPart = suffix[createRandom(0, suffix.length -1)];
+    this.name = `${prefixPart} ${namePart} ${suffixPart}`;
   }
 }
 
@@ -31,11 +41,11 @@ exports.initialize = function(server) {
     else {
       auths[userCount] = socket.handshake.headers.cookie;
     }
-    let rnd = createRandom(0,(names.length));
-    var userProto = new userProtoModel(
-      names[rnd]
-    );
-    globalMap.users[userCount] = userProto;
+    
+    let user = new User();
+
+    globalMap.users[userCount] = user;
+    
   //send a serverMessage to client
     socket.send(JSON.stringify(
       {
@@ -123,7 +133,3 @@ exports.initialize = function(server) {
 };
 
 
-var createRandom = (min, max) => {
-  var newRandom = Math.floor((Math.random() * max) + min);
-  return newRandom;
-}
