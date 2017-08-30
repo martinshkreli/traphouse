@@ -83,13 +83,13 @@ exports.initialize = function(server) {
     let user = new User(renderRoom);
     globalMap.users[userCount] = user;
 
-    sender({message: `Connected to TrapHouse. Welcome ${user.name}.`});
+    sender({message: `Connected to TrapHouse. Welcome <b>${user.name}.</b>`});
       user.room.usersPresent.push(user.name);
       socket.join(user.room.briefDescription);
       socket.broadcast.to(user.room.briefDescription).emit('message', 
       JSON.stringify({
         type: 'renderMessage', 
-        message: `${user.name} has arrived.`}
+        message: `<b>${user.name} has arrived.</b>`}
       ));
       
 

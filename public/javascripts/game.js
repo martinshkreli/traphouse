@@ -5,7 +5,6 @@ var user = {
   userId: 0
 }
 
-
 var socket = io.connect('/');
 
 var map = {
@@ -24,15 +23,20 @@ var auth = "";
 socket.on('message', function(data) {
   data = JSON.parse(data);
   console.log(data);
+
   if (data.userId) {
     user.userId = data.userId;
   };
+
   if (data.username) {
     $('#messages').append('<div class="'+data.type+'"><span class="name">' + data.username + ":</span> " + data.message + '</div');
   };
+
   if (data.type === 'connection') {
     auth = data.cookie;
   }
+
+  /*
   if (data.type === 'messages') {
     const allChatMessages = data.chats;
     const listElements = $('#chatroom-messages').children();
@@ -46,6 +50,8 @@ socket.on('message', function(data) {
         $("#chatroom-messages").scrollTop($("#chatroom-messages").prop('scrollHeight'));
     }
   }
+*/
+
   if(data.type === "initConnect") {
     console.log('got connection');
     $('#playerConsole').html('Player name: ' + data.name);
