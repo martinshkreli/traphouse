@@ -86,8 +86,12 @@ exports.initialize = function(server) {
     sender({message: `Connected to TrapHouse. Welcome ${user.name}.`});
     //add user's name to room object
       user.room.usersPresent.push(user.name);
-    //try to add user to socket room
       socket.join(user.room.briefDescription);
+      socket.broadcast.to(user.room.briefDescription).emit('message', 
+      JSON.stringify({
+        type: 'renderMessage', 
+        message: `${user.name} has arrived.`}
+      ));
       
 
     renderRoom(user, sender);
