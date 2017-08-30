@@ -14,9 +14,9 @@ let serverSender = socket => message => {
 var io = require('socket.io');
 var sanitizeHtml = require('sanitize-html');
 var userCount = 0;
-var prefix = ['Lil', 'Big', 'Fat', 'OG', 'Blood', 'El', 'Don', 'Boss', 'Killer', 'Babyface', 'Yung', 'EZ', 'Easy', 'Big Homie', 'Mister']
-var suffix = ['da OG', 'The Ruler', 'The Best', 'Stacks', 'the Thug']
-var names = ['Mills', 'Bones', 'T', 'Tone', 'Tony', 'Daquan', 'Goose', 'Deadeye', 'ODB', 'Virus', 'Guerro', 'Speakeasy', 'Florida', 'Jinx', 'ODB', 'Nasty', 'Slim', 'Maurice', 'Gunz', 'Trap Lord', 'Mo', 'Tyrone', 'Slam', 'T-Bone', 'Daddy', 'Daquan', 'Pablo', 'Jimmy Two Times', 'Johnny Bagels', 'Quan', 'Shorty', 'RaRa', 'TayTay', 'Uzi'];
+var prefix = ['Lil', 'Big', 'Fat', 'OG', 'Blood', 'El', 'Don', 'Boss', 'Killer', 'Babyface', 'Yung', 'EZ', 'Easy', 'Big Homie', 'Mister', 'Slim']
+var suffix = ['da OG', 'The Ruler', 'The Best', 'Stacks', 'the Thug', 'the GOAT', 'Money', '$$$', 'tha Don', 'Gotti']
+var names = ['Mills', 'Bones', 'T', 'Tone', 'Tony', 'Daquan', 'Goose', 'Deadeye', 'ODB', 'Virus', 'Guerro', 'Speakeasy', 'Florida', 'Jinx', 'ODB', 'Nasty', 'Slim', 'Maurice', 'Gunz', 'Trap Lord', 'Mo', 'Tyrone', 'Slam', 'T-Bone', 'Daddy', 'Daquan', 'Pablo', 'Jimmy Two Times', 'Johnny Bagels', 'Quan', 'Shorty', 'RaRa', 'TayTay', 'Uzi', 'Chunga', '2na', 'Quills', 'Rodney'];
 var users = [];
 var auths = [];
 
@@ -84,7 +84,6 @@ exports.initialize = function(server) {
     globalMap.users[userCount] = user;
 
     sender({message: `Connected to TrapHouse. Welcome ${user.name}.`});
-    //add user's name to room object
       user.room.usersPresent.push(user.name);
       socket.join(user.room.briefDescription);
       socket.broadcast.to(user.room.briefDescription).emit('message', 

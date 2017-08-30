@@ -1,6 +1,6 @@
 module.exports = (input, user, send, socket) => {
   
-let verbs = ['say', 'freestyle', 'look', 'i', 'inv', 'attack', 'hide', 'snitch'];
+let verbs = ['say', 'freestyle', 'look', 'i', 'inv', 'attack', 'hide', 'snitch', 'spit'];
 let directions = ['north', 'east', 'west', 'south'];
 
 let parsed =  input.split(' ');
@@ -20,7 +20,6 @@ if (first === 'say' && parsed[1]) {
     message: `You say, "${message}".`
   });
   socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({type: 'renderMessage', message: `${user.name} says '${message}'.`}));
-  console.log(user.name, user.room.briefDescription);
 };
 
 if (first === 'say' && parsed[1] == false) {
@@ -34,6 +33,15 @@ if (first === 'freestyle') {
   send({
     message:  "You freestyle."
   });
+  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({type: 'renderMessage', message: `${user.name} freestyles.`}));
+};
+
+if (first === 'freestyle') {
+  //use roomAction
+  send({
+    message:  "You spit. Ew."
+  });
+  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({type: 'renderMessage', message: `${user.name} spits. Disgusting.`}));
 };
 
 if (~directions.indexOf(first)) {
