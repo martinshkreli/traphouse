@@ -52,6 +52,7 @@ socket.on('message', function(data) {
   };
   if(data.type === "renderMessage") {
     $('#list-messages').append(`<li>${data.message} </li>`);
+    $("#chatroom-messages").scrollTop($("#chatroom-messages").prop('scrollHeight'));
   }
 });
 
