@@ -36,7 +36,7 @@ if (first === 'freestyle') {
   socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({type: 'renderMessage', message: `${user.name} freestyles.`}));
 };
 
-if (first === 'freestyle') {
+if (first === 'spit') {
   //use roomAction
   send({
     message:  "You spit. Ew."
