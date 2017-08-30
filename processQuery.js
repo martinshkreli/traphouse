@@ -1,6 +1,6 @@
 module.exports = (input, user, send, socket) => {
   
-let verbs = ['say', 'freestyle', 'look', 'i', 'inv', 'attack', 'hide', 'snitch', 'spit', 'smoke'];
+let verbs = ['say', 'freestyle', 'look', 'i', 'inv', 'attack', 'hide', 'snitch', 'spit', 'smoke', 'chill'];
 let directions = ['north', 'east', 'west', 'south'];
 
 let parsed =  input.split(' ');
@@ -22,53 +22,51 @@ if (first === 'say' && parsed[1]) {
   socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({type: 'renderMessage', message: `<b>${user.name}</b> says '${message}'.`}));
 };
 
-if (first === 'say' && parsed[1] == false) {
-  send({
-    message: 'Say what?!'
-  });
+if (first === 'say' && ~!parsed[1]) {
+  send({message: 'Say what?!'});
 };
 
 if (first === 'freestyle') {
-  //use roomAction
-  send({
-    message:  "You freestyle."
-  });
-  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({type: 'renderMessage', message: `<b>${user.name}</b> freestyles.`}));
+  send({message: "You freestyle."});
+  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({
+    type: 'renderMessage', message: `<b>${user.name}</b> freestyles.`}));
 };
 
-if (first === 'smoke' && parsed[1] == false) {
-  //use roomAction
-  send({
-    message:  "You some some weed."
-  });
-  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({type: 'renderMessage', message: `<b>${user.name}</b> smokes some weed.`}));
+if (first === 'attack') {
+  send({message: "You threaten everyone."});
+  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({
+    type: 'renderMessage', message: `<b>${user.name}</b> is threatening to fuck everyone up.`}));
 };
 
+if (first === 'chill') {
+  send({message: "You chill."});
+  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({
+    type: 'renderMessage', message: `<b>${user.name}</b> is chillin'.`}));
+};
+
+if (first === 'smoke' && ~!parsed[1]) {
+  send({message: "You smoke some weed."});
+  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({
+    type: 'renderMessage', message: `<b>${user.name}</b> smokes some weed.`}));
+};
 
 if (first === 'smoke' && parsed[1] === 'crack') {
-  //use roomAction
-  send({
-    message:  "You some some crack. Got damn."
-  });
-  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({type: 'renderMessage', message: `<b>${user.name}</b> is smoking crack!`}));
+  send({message:  "You some some crack. Got damn."});
+  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({
+    type: 'renderMessage', message: `<b>${user.name}</b> is smoking crack!`}));
 };
 
 if (first === 'spit') {
-  //use roomAction
-  send({
-    message:  "You spit. Ew."
-  });
-  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({type: 'renderMessage', message: `<b>${user.name}</b> spits. Disgusting.`}));
+  send({message:  "You spit on the ground. Ew."});
+  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({
+    type: 'renderMessage', message: `<b>${user.name}</b> spits. Disgusting.`}));
 };
 
 if (first === 'hide') {
-  //use roomAction
-  send({
-    message:  "You try to find a hiding place."
-  });
-  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({type: 'renderMessage', message: `<b>${user.name}</b> is trying to hide.`}));
+  send({message:  "You try to find a hiding place."});
+  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({
+    type: 'renderMessage', message: `<b>${user.name}</b> is trying to hide.`}));
 };
-
 
 if (~directions.indexOf(first)) {
   send({
