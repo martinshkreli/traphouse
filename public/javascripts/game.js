@@ -1,11 +1,13 @@
 $(function() {
+  
 var user = {
   name: '',
   userId: 0
 }
-var c = document.getElementById("game");
-var ctx = c.getContext("2d");
+
+
 var socket = io.connect('/');
+
 var map = {
   type: 'map',
   users: []
@@ -48,6 +50,9 @@ socket.on('message', function(data) {
     console.log('got connection');
     $('#playerConsole').html('Player name: ' + data.name);
   };
+  if(data.type === "renderMessage") {
+    $('#list-messages').append(`<li>${data.message} </li>`);
+  }
 });
 
 window.onkeydown = function(e) {

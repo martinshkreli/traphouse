@@ -7,6 +7,15 @@ a {
   color: #00B7FF;
 }
 #chatroom-messages {
-  overflow: auto;
-  height: 200;
+  margin-top: 20px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 400;
+  width: 800;
+  list-style: none;
+  border: 1px solid black;
+}
+
+#chatroom-messages ul li {
+  list-style: none;
 }
