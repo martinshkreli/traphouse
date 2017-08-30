@@ -19,3 +19,9 @@ a {
 #chatroom-messages ul li {
   list-style: none;
 }
+
+#plies {
+  position: absolute;
+  right: 50px;
+  top: 50px;
+}
