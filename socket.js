@@ -89,7 +89,7 @@ exports.initialize = function(server) {
       socket.broadcast.to(user.room.briefDescription).emit('message', 
       JSON.stringify({
         type: 'renderMessage', 
-        message: `<b>${user.name} has arrived.</b>`}
+        message: `<b>${user.name}</b> has arrived.`}
       ));
       
 
