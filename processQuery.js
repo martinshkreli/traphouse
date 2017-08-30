@@ -1,11 +1,9 @@
-module.exports = (input, user, send) => {
+module.exports = (input, user, send, socket) => {
   
 let verbs = ['say', 'freestyle', 'look', 'i', 'inv', 'attack', 'hide', 'snitch'];
 let directions = ['north', 'east', 'west', 'south'];
 
 let parsed =  input.split(' ');
-
-console.log(parsed);
 
 if (!parsed) {
   send({
@@ -21,10 +19,11 @@ if (first === 'say' && parsed[1]) {
   send ({
     message: `You say, "${message}".`
   });
-
+  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({type: 'renderMessage', message: `${user.name} says '${message}'.`}));
+  console.log(user.name, user.room.briefDescription);
 };
 
-if (first === 'say') {
+if (first === 'say' && parsed[1] == false) {
   send({
     message: 'Say what?!'
   });

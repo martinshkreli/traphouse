@@ -14,9 +14,9 @@ let serverSender = socket => message => {
 var io = require('socket.io');
 var sanitizeHtml = require('sanitize-html');
 var userCount = 0;
-var prefix = ['Lil', 'Big', 'Fat', 'OG', 'Blood', 'El', 'Don', 'Boss', 'Killer', 'Babyface', 'Yung', 'EZ', 'Easy', 'Big Homie' ]
-var suffix = ['da OG', 'The Ruler', 'The Best', 'Stacks']
-var names = ['Mills', 'Bones', 'T', 'Tone', 'Tony', 'Daquan', 'Deadeye', 'ODB', 'Virus', 'Guerro', 'Speakeasy', 'Florida', 'Jinx', 'ODB', 'Nasty', 'Slim', 'Maurice', 'Gunz', 'Trap Lord', 'Mo', 'Tyrone', 'Slam', 'T-Bone', 'Daddy', 'Daquan', 'Pablo', 'Jimmy Two Times', 'Johnny Bagels', 'Quan', 'Shorty', 'RaRa', 'TayTay', 'Uzi'];
+var prefix = ['Lil', 'Big', 'Fat', 'OG', 'Blood', 'El', 'Don', 'Boss', 'Killer', 'Babyface', 'Yung', 'EZ', 'Easy', 'Big Homie', 'Mister']
+var suffix = ['da OG', 'The Ruler', 'The Best', 'Stacks', 'the Thug']
+var names = ['Mills', 'Bones', 'T', 'Tone', 'Tony', 'Daquan', 'Goose', 'Deadeye', 'ODB', 'Virus', 'Guerro', 'Speakeasy', 'Florida', 'Jinx', 'ODB', 'Nasty', 'Slim', 'Maurice', 'Gunz', 'Trap Lord', 'Mo', 'Tyrone', 'Slam', 'T-Bone', 'Daddy', 'Daquan', 'Pablo', 'Jimmy Two Times', 'Johnny Bagels', 'Quan', 'Shorty', 'RaRa', 'TayTay', 'Uzi'];
 var users = [];
 var auths = [];
 
@@ -83,9 +83,12 @@ exports.initialize = function(server) {
     let user = new User(renderRoom);
     globalMap.users[userCount] = user;
 
-    sender({
-      message: 'Connected to TrapHouse.'
-    });
+    sender({message: `Connected to TrapHouse. Welcome ${user.name}.`});
+    //add user's name to room object
+      user.room.usersPresent.push(user.name);
+    //try to add user to socket room
+      socket.join(user.room.briefDescription);
+      
 
     renderRoom(user, sender);
 
@@ -105,17 +108,13 @@ exports.initialize = function(server) {
           } else {return;}
         }
 
-        if (message.type === 'disconnection') {
-          console.log(message.message.userId + " disconnected");
-        }
-
+        if (message.type === 'disconnection') {console.log(message.message.userId + " disconnected");}
         if (message.type === 'textMessage') {
-          sender({
-            message: `> ${sanitizeHtml(message.msg)}`
-          });
+          sender({message: `> ${sanitizeHtml(message.msg)}`});
+        
         };
 
-        processQuery(message.msg, user, sender);
+        processQuery(message.msg, user, sender, socket);
 
       } catch (x) {
           if (users[userCount] === 'undefined') {return}
