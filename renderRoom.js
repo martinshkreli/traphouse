@@ -1,5 +1,5 @@
 module.exports = (user, sender) => {
-
+    console.log('called renderRoom');
     sender({
         message: `[${user.room.briefDescription}]`
     });

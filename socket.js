@@ -31,7 +31,10 @@ class User {
     this.renderRoom = renderRoom;
   }
   move(direction, sender) {
-    let directionObj = this.room.exits[direction];
+    let roomIndex = this.room.usersPresent.indexOf(this.name);
+    console.log(roomIndex);
+    this.room.usersPresent.splice(roomIndex, 1);
+    let directionObj = this.room.exits[direction];    
     this.room = globalMap.rooms[directionObj];
     this.renderRoom(this, sender);
     this.room.usersPresent.push(this.name);
