@@ -1,9 +1,10 @@
 let processQuery = require('./processQuery');
 let renderRoom = require('./renderRoom');
+
 var createRandom = (min, max) => {
   var newRandom = Math.floor((Math.random() * max) + min);
   return newRandom;
-}
+};
 
 let serverSender = socket => message => {
   socket.send(JSON.stringify(Object.assign({
@@ -14,8 +15,8 @@ let serverSender = socket => message => {
 var io = require('socket.io');
 var sanitizeHtml = require('sanitize-html');
 var userCount = 0;
-var prefix = ['Lil', 'Big', 'Fat', 'OG', 'Blood', 'El', 'Don', 'Boss', 'Killer', 'Babyface', 'Yung', 'EZ', 'Easy', 'Big Homie', 'Mister', 'Slim']
-var suffix = ['da OG', 'The Ruler', 'The Best', 'Stacks', 'the Thug', 'the GOAT', 'Money', '$$$', 'tha Don', 'Gotti']
+var prefix = ['Lil', 'Big', 'Fat', 'OG', 'Blood', 'El', 'Don', 'Boss', 'Killer', 'Babyface', 'Yung', 'EZ', 'Easy', 'Big Homie', 'Mister', 'Slim', 'Killa', 'Soulja'];
+var suffix = ['da OG', 'The Ruler', 'The Best', 'Stacks', 'the Thug', 'the GOAT', 'Money', '$$$', 'tha Don', 'Gotti', 'da Connect', 'Tellem', 'da Plug'];
 var names = ['Mills', 'Bones', 'T', 'Tone', 'Tony', 'Daquan', 'Goose', 'Deadeye', 'ODB', 'Virus', 'Guerro', 'Speakeasy', 'Florida', 'Jinx', 'ODB', 'Nasty', 'Slim', 'Maurice', 'Gunz', 'Trap Lord', 'Mo', 'Tyrone', 'Slam', 'T-Bone', 'Daddy', 'Daquan', 'Pablo', 'Jimmy Two Times', 'Johnny Bagels', 'Quan', 'Shorty', 'RaRa', 'TayTay', 'Uzi', 'Chunga', '2na', 'Quills', 'Rodney'];
 var users = [];
 var auths = [];
@@ -33,8 +34,9 @@ class User {
     let directionObj = this.room.exits[direction];
     this.room = globalMap.rooms[directionObj];
     this.renderRoom(this, sender);
+    this.room.usersPresent.push(this.name);
   }
-}
+};
 
 var globalMap = {
   type: 'map',
@@ -61,7 +63,7 @@ var globalMap = {
       onTheFloor: ['glock'],
     }
   }
-}
+};
 
 exports.initialize = function(server) {
   io = io.listen(server);
@@ -78,7 +80,7 @@ exports.initialize = function(server) {
     if (!socket.handshake.headers.cookie) {return;}
     else {
       auths[userCount] = socket.handshake.headers.cookie;
-    }
+    };
     
     let user = new User(renderRoom);
     globalMap.users[userCount] = user;
@@ -113,15 +115,16 @@ exports.initialize = function(server) {
 
         if (message.type === 'disconnection') {console.log(message.message.userId + " disconnected");}
         if (message.type === 'textMessage') {
-          sender({message: `> ${sanitizeHtml(message.msg)}`});
-        
+          let cleanMessage = sanitizeHtml(message.msg, {allowedTags: []});
+          sender({message: `> ${cleanMessage}`});
         };
 
-        processQuery(message.msg, user, sender, socket);
+        let newMessage = sanitizeHtml(message.msg, {allowedTags: []});
+
+        processQuery(newMessage, user, sender, socket);
 
       } catch (x) {
           if (users[userCount] === 'undefined') {return}
-          console.log(x);
         }
     });
 

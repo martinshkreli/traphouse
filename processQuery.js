@@ -77,8 +77,10 @@ if (~directions.indexOf(first)) {
   send({
     message: `You move ${first}.`
   });
+  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({
+    type: 'renderMessage', message: `<b>${user.name}</b> moves ${first}.`}));
   user.move(first, send);
-  socket.broadcast.to(user.room.briefDescription).emit('message', JSON.stringify({type: 'renderMessage', message: `<b>${user.name}</b> moves ${first}.`}));
+  
 };
 
 if (!~verbs.indexOf(first) && !~directions.indexOf(first)) {
