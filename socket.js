@@ -6,12 +6,6 @@ var createRandom = (min, max) => {
   return newRandom;
 };
 
-let serverSender = socket => message => {
-  socket.send(JSON.stringify(Object.assign({
-    type: 'renderMessage'
-  }, message)));
-};
-
 var io = require('socket.io');
 var sanitizeHtml = require('sanitize-html');
 var userCount = 0;
@@ -22,29 +16,50 @@ var users = [];
 var auths = [];
 
 class User {
-  constructor(renderRoom) {
+  constructor(socket) {
     const prefixPart = prefix[createRandom(0, prefix.length - 1)];
     const namePart = names[createRandom(0, names.length - 1)];
     const suffixPart = suffix[createRandom(0, suffix.length -1)];
+    this.id = createRandom(0,1000000);
     this.name = `${prefixPart} ${namePart} ${suffixPart}`;
-    this.room = globalMap.rooms.upperRight;
-    this.renderRoom = renderRoom;
-  }
-  move(direction, sender) {
-    let roomIndex = this.room.usersPresent.indexOf(this.name);
-    console.log(roomIndex);
-    this.room.usersPresent.splice(roomIndex, 1);
-    let directionObj = this.room.exits[direction];    
-    this.room = globalMap.rooms[directionObj];
-    this.renderRoom(this, sender);
-    this.room.usersPresent.push(this.name);
+    this.leftHand = 'weed';
+    this.rightHand = 'crack';
+    this.room = '';
+    this.socket = socket;
+    this.exp = {
+      thuggery: 0,
+      crackSmoking: 0
+    };
+  };
+
+  joinSocketChannel(room) {
+    this.leaveSocketChannel();
+    this.socket.join(room);
+  };
+
+  leaveSocketChannel(socket) {
+    this.socket.leave('*');
+  };
+
+  sendToUser(message) {
+    this.socket.send(JSON.stringify(Object.assign({
+      type: 'renderMessage'
+    }, message)));
+  };
+
+  broadcastSocketChannel(room, message) {
+    this.socket.broadcast.to(room).emit('message',
+      JSON.stringify({
+        type: 'renderMessage', 
+          message: message
+     })
+  );
   }
 };
 
-var globalMap = {
-  type: 'map',
-  users: [],
-  rooms: {
+class globalMap {
+  constructor() {
+  this.rooms = {
     upperRight: {
       exits: {
         west: 'upperLeft',
@@ -52,7 +67,7 @@ var globalMap = {
       },
       briefDescription: 'East 43rd Street',
       description: 'You\'ve arrived where all young gangsters start, the upper right part of the hood.<br>Obvious exits: south, west.',
-      usersPresent: ['Fred the Junkie'],
+      usersPresent: [],
       onTheFloor: ['weed'],
     },
     upperLeft: {
@@ -66,39 +81,46 @@ var globalMap = {
       onTheFloor: ['glock'],
     }
   }
+  this.users = [];
+}
+
+  spawnUser(socket) {
+    const user = new User(socket);
+    this.users.push(user);
+    this.moveRoom(user, 'upperRight');
+    return user;
+  };
+
+  moveRoom(user, room, previousRoom) {
+    //create remove room method
+    this.rooms[room].usersPresent.push(user);
+    user.room = this.rooms[room];
+    user.joinSocketChannel(this.rooms[room]);
+    user.broadcastSocketChannel(this.rooms[room], `<b>${user.name}</b> has arrived.`);
+    renderRoom(user, this.rooms[room]);
+  /*   
+  move(direction, sender)
+    let roomIndex = this.room.usersPresent.indexOf(this.name);
+    this.room.usersPresent.splice(roomIndex, 1);
+    let directionObj = this.room.exits[direction];*/
+  }
 };
 
 exports.initialize = function(server) {
+  let mGlobalMap = new globalMap();
   io = io.listen(server);
   io.sockets.on("connection", function(socket) {
-
-    let sender = serverSender(socket);
-
-    sender({
+    let user = mGlobalMap.spawnUser(socket);
+    user.sendToUser({
       type: 'connection',
       cookie: socket.handshake.headers.cookie
     });
 
     if (socket.handshake.headers == undefined) {return;}
     if (!socket.handshake.headers.cookie) {return;}
-    else {
-      auths[userCount] = socket.handshake.headers.cookie;
-    };
-    
-    let user = new User(renderRoom);
-    globalMap.users[userCount] = user;
+    else {auths[userCount] = socket.handshake.headers.cookie;};    
 
-    sender({message: `Connected to TrapHouse. Welcome <b>${user.name}.</b>`});
-      user.room.usersPresent.push(user.name);
-      socket.join(user.room.briefDescription);
-      socket.broadcast.to(user.room.briefDescription).emit('message', 
-      JSON.stringify({
-        type: 'renderMessage', 
-        message: `<b>${user.name}</b> has arrived.`}
-      ));
-      
-
-    renderRoom(user, sender);
+    user.sendToUser({message: `Connected to TrapHouse. Welcome <b>${user.name}.</b>`});
 
     socket.on('message', (message) => {
       //PARSE THE MESSAGE FROM STRING BACK TO JSON
@@ -118,13 +140,14 @@ exports.initialize = function(server) {
 
         if (message.type === 'disconnection') {console.log(message.message.userId + " disconnected");}
         if (message.type === 'textMessage') {
+          console.log('got dirty message:', message.msg);
           let cleanMessage = sanitizeHtml(message.msg, {allowedTags: []});
-          sender({message: `> ${cleanMessage}`});
+          user.sendToUser({message: `> ${cleanMessage}`});
         };
 
         let newMessage = sanitizeHtml(message.msg, {allowedTags: []});
-
-        processQuery(newMessage, user, sender, socket);
+        console.log('got: ', newMessage);
+        processQuery(newMessage, user);
 
       } catch (x) {
           if (users[userCount] === 'undefined') {return}
